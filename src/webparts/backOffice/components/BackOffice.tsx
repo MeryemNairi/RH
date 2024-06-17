@@ -193,6 +193,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                       <div className={styles.recordField}>{entry.short_description}</div>
                       <div className={styles.recordField}>{entry.deadline.toLocaleDateString()}</div>
                       <div className={styles.recordField}>{entry.userEmail}</div>
+                      <div className={styles.recordField}>{entry.IdBoost}</div>
                       <div className={styles.recordField}>
                        
                         <span className={styles.iconSpace}></span>

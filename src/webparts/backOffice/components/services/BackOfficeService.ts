@@ -36,7 +36,7 @@ export const submitForm = async (formData: IFormData) => {
 export const getFormData = async (): Promise<IFormData[]> => {
   try {
       const list = sp.web.lists.getByTitle('Communication');
-      const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline').get();
+      const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost').get();
       return items.map((item: any) => ({
           id: item.Id,
           offre_title: item.offre_title,
