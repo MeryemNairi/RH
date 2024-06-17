@@ -12,6 +12,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     deadline: new Date(),
     userEmail: '',
     IdBoost: 0,
+    status: 'pending', 
   });
 
   const [idBoostPlaceholder] = React.useState<string>("IdBoost");
@@ -63,6 +64,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
         deadline: new Date(),
         userEmail: '',
         IdBoost: 9,
+        status: 'pending',
       });
       alert('Form submitted successfully!');
       fetchFormData();
@@ -194,6 +196,8 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                       <div className={styles.recordField}>{entry.deadline.toLocaleDateString()}</div>
                       <div className={styles.recordField}>{entry.userEmail}</div>
                       <div className={styles.recordField}>{entry.IdBoost}</div>
+                      <div className={styles.recordField}>{entry.status}</div>
+
                       <div className={styles.recordField}>
                        
                         <span className={styles.iconSpace}></span>

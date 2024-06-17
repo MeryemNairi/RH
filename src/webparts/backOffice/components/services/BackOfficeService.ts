@@ -14,6 +14,7 @@ export interface IFormData {
   deadline: Date;
   userEmail: string;
   IdBoost: number; 
+  status: string; 
 }
 
 export const submitForm = async (formData: IFormData) => {
@@ -26,6 +27,7 @@ export const submitForm = async (formData: IFormData) => {
       deadline: formData.deadline.toISOString(),
       userEmail: formData.userEmail,
       IdBoost: formData.IdBoost,
+      status: formData.status, 
     });
   } catch (error) {
     console.error('Error submitting form:', error);
@@ -36,7 +38,7 @@ export const submitForm = async (formData: IFormData) => {
 export const getFormData = async (): Promise<IFormData[]> => {
   try {
       const list = sp.web.lists.getByTitle('Communication');
-      const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost').get();
+      const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost', 'status').get();
       return items.map((item: any) => ({
           id: item.Id,
           offre_title: item.offre_title,
@@ -44,6 +46,7 @@ export const getFormData = async (): Promise<IFormData[]> => {
           deadline: new Date(item.deadline),
           userEmail: item.userEmail,
           IdBoost: item.IdBoost,
+          status: item.status, 
       }));
   } catch (error) {
       console.error('Error fetching form data:', error);
