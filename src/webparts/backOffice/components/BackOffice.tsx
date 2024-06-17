@@ -127,21 +127,20 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
           <div>
             <div style={{ marginBottom: '50px' }}></div>
             <div style={{ position: 'relative' }}>
-              <form className={styles.formContainer1} onSubmit={handleSubmit}>
-                <div className={styles.inputField}>
+            <form className={styles.formContainer1} onSubmit={handleSubmit}>
+              <div className={styles.inputField}>
+                <select
+                  name="offre_title"
+                  value={formData.offre_title}
+                  onChange={handleInputChange}
+                >
                   {options.map((option, index) => (
-                    <label key={index}>
-                      <input
-                        type="radio"
-                        name="offre_title"
-                        value={option}
-                        checked={formData.offre_title === option}
-                        onChange={handleInputChange}
-                      />
+                    <option key={index} value={option}>
                       {option}
-                    </label>
+                    </option>
                   ))}
-                </div>
+                </select>
+              </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
                   <input
@@ -187,7 +186,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                 </div>
               </form>
               <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
-                <h2 className={styles.recordsTitle}>Records</h2>
+                <h2 className={styles.recordsTitle}>Historiques:</h2>
                 <div className={styles.recordsContainer}>
                   {formEntries.map((entry, index) => (
                     <div key={index} className={styles.record}>
