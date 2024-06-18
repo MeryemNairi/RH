@@ -3,6 +3,8 @@ import { IFormProps, IFormData } from './services/BackOfficeService';
 import { submitForm, getFormData, updateFormEntry, deleteFormEntry } from './services/BackOfficeService';
 import styles from './BackOffice.module.scss';
 import { sp } from "@pnp/sp";
+import Navbar from './Header/navbar';
+import Footer from './Footer/footer';
 
 export const BackOffice: React.FC<IFormProps> = ({ context }) => {
   const [formData, setFormData] = React.useState<IFormData>({
@@ -11,17 +13,17 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     short_description: '',
     deadline: new Date(),
     userEmail: '',
-    IdBoost: 0,
+    IdBoost:  NaN,  
     status: 'pending', 
   });
 
-  const [idBoostPlaceholder] = React.useState<string>("IdBoost");
-
   const [formEntries, setFormEntries] = React.useState<IFormData[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = React.useState<string>("");
 
   React.useEffect(() => {
     fetchFormData();
+    fetchCurrentUserEmail(); 
   }, []);
 
   const fetchFormData = async () => {
@@ -35,19 +37,27 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
+  
+    if (name === 'IdBoost') {
+      const intValue = parseInt(value, 10); 
+  
+      if (!isNaN(intValue)) {
+        setFormData(prevState => ({
+          ...prevState,
+          [name]: intValue,
+        }));
+      }
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (isSubmitting) {
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -62,8 +72,8 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
         offre_title: '',
         short_description: '',
         deadline: new Date(),
-        userEmail: '',
-        IdBoost: 9,
+        userEmail: '', // Reset userEmail to empty
+        IdBoost:  NaN,  // Reset IdBoost to empty string
         status: 'pending',
       });
       alert('Form submitted successfully!');
@@ -92,21 +102,15 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
   const fetchCurrentUserEmail = async () => {
     try {
       const currentUser = await sp.web.currentUser.get();
-      return currentUser.Email;
+      setCurrentUserEmail(currentUser.Email || ""); // Set the current user's email to state
+      setFormData(prevState => ({
+        ...prevState,
+        userEmail: currentUser.Email || "",
+      }));
     } catch (error) {
       console.error("Error fetching current user email:", error);
-      return null;
     }
   };
-
-  React.useEffect(() => {
-    fetchCurrentUserEmail().then((email) => {
-      setFormData((prevState) => ({
-        ...prevState,
-        userEmail: email || "",
-      }));
-    });
-  }, []);
 
   const options = [
     'Attestation de travail',
@@ -118,56 +122,66 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     'Attestation de titularisation',
     'Bulletins de paie cachetés',
   ];
-  
 
   return (
-    <>
+    <div>
+      <Navbar />
       <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', padding: '0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div>
             <div style={{ marginBottom: '50px' }}></div>
             <div style={{ position: 'relative' }}>
-            <form className={styles.formContainer1} onSubmit={handleSubmit}>
-              <div className={styles.inputField}>
-                <select
-                  name="offre_title"
-                  value={formData.offre_title}
-                  onChange={handleInputChange}
-                >
-                  {options.map((option, index) => (
-                    <option key={index} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <form className={styles.formContainer1} onSubmit={handleSubmit}>
+                <div className={styles.inputField}>
+                  <select
+                    name="offre_title"
+                    value={formData.offre_title}
+                    onChange={handleInputChange}
+                    required  // Adding required attribute for validation
+                  >
+                    <option value="">Select an option</option>
+                    {options.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
                   <input
                     type="email"
                     id="userEmail"
                     name="userEmail"
-                    value={formData.userEmail}
+                    value={currentUserEmail} 
                     onChange={handleInputChange}
-                    placeholder="Email"
-                    disabled 
+                    disabled  
                   />
                 </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
                   <input
-                    type="number"
+                    type="text" 
                     id="IdBoost"
                     name="IdBoost"
-                    value={formData.IdBoost || ''} 
+                    value={formData.IdBoost || ''}
                     onChange={handleInputChange}
-                    placeholder={idBoostPlaceholder}
+                    placeholder="IdBoost"
+                    required  
                   />
                 </div>
 
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
-                  <textarea id="short_description" name="short_description" value={formData.short_description} onChange={handleInputChange} placeholder="Description" style={{ backgroundColor: '#F5F9FF', width: '690px', height: '200px' }} className={styles.ShortDescription} />
+                  <textarea
+                    id="short_description"
+                    name="short_description"
+                    value={formData.short_description}
+                    onChange={handleInputChange}
+                    placeholder="Description"
+                    style={{ backgroundColor: '#F5F9FF', width: '690px', height: '200px' }}
+                    className={styles.ShortDescription}
+                  />
                 </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputContainer2}>
@@ -198,7 +212,6 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                       <div className={styles.recordField}>{entry.status}</div>
 
                       <div className={styles.recordField}>
-                       
                         <span className={styles.iconSpace}></span>
                         <svg
                           width="28"
@@ -220,7 +233,8 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
           </div>
         </div>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 
