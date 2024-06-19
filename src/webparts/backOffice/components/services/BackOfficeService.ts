@@ -15,11 +15,12 @@ export interface IFormData {
   userEmail: string;
   IdBoost: number;
   status: string;
+  city: string;  
 }
+
 
 export const submitForm = async (formData: IFormData) => {
   try {
-
     const list = sp.web.lists.getByTitle('Communication');
     await list.items.add({
       offre_title: formData.offre_title,
@@ -28,6 +29,7 @@ export const submitForm = async (formData: IFormData) => {
       userEmail: formData.userEmail,
       IdBoost: formData.IdBoost,
       status: formData.status,
+      city: formData.city, 
     });
   } catch (error) {
     console.error('Error submitting form:', error);
@@ -35,10 +37,11 @@ export const submitForm = async (formData: IFormData) => {
   }
 };
 
+
 export const getFormData = async (): Promise<IFormData[]> => {
   try {
     const list = sp.web.lists.getByTitle('Communication');
-    const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost', 'status').get();
+    const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost', 'status', 'city').get();
     return items.map((item: any) => ({
       id: item.Id,
       offre_title: item.offre_title,
@@ -47,12 +50,14 @@ export const getFormData = async (): Promise<IFormData[]> => {
       userEmail: item.userEmail,
       IdBoost: item.IdBoost,
       status: item.status,
+      city: item.city,  
     }));
   } catch (error) {
     console.error('Error fetching form data:', error);
     throw new Error('An error occurred while fetching form data. Please try again.');
   }
 };
+
 
 
 export const updateFormEntry = async (id: number, formData: IFormData) => {

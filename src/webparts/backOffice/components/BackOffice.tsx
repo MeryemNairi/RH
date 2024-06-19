@@ -13,8 +13,9 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     short_description: '',
     deadline: new Date(),
     userEmail: '',
-    IdBoost:  NaN,  
-    status: 'pending', 
+    IdBoost:  NaN,
+    status: 'pending',
+    city: '', 
   });
 
   const [formEntries, setFormEntries] = React.useState<IFormData[]>([]);
@@ -23,7 +24,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
 
   React.useEffect(() => {
     fetchFormData();
-    fetchCurrentUserEmail(); 
+    fetchCurrentUserEmail();
   }, []);
 
   const fetchFormData = async () => {
@@ -37,10 +38,10 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-  
+
     if (name === 'IdBoost') {
-      const intValue = parseInt(value, 10); 
-  
+      const intValue = parseInt(value, 10);
+
       if (!isNaN(intValue)) {
         setFormData(prevState => ({
           ...prevState,
@@ -54,7 +55,6 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
       }));
     }
   };
-  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,9 +72,10 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
         offre_title: '',
         short_description: '',
         deadline: new Date(),
-        userEmail: '', // Reset userEmail to empty
-        IdBoost:  NaN,  // Reset IdBoost to empty string
+        userEmail: '',
+        IdBoost:  NaN,
         status: 'pending',
+        city: '',  // Reset city to empty string
       });
       alert('Form submitted successfully!');
       fetchFormData();
@@ -102,7 +103,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
   const fetchCurrentUserEmail = async () => {
     try {
       const currentUser = await sp.web.currentUser.get();
-      setCurrentUserEmail(currentUser.Email || ""); // Set the current user's email to state
+      setCurrentUserEmail(currentUser.Email || "");
       setFormData(prevState => ({
         ...prevState,
         userEmail: currentUser.Email || "",
@@ -123,6 +124,8 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     'Bulletins de paie cachetés',
   ];
 
+  const cities = ['Rabat', 'Fes'];  
+
   return (
     <div>
       <Navbar />
@@ -137,7 +140,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                     name="offre_title"
                     value={formData.offre_title}
                     onChange={handleInputChange}
-                    required  // Adding required attribute for validation
+                    required
                   >
                     <option value="">Select an option</option>
                     {options.map((option, index) => (
@@ -153,24 +156,39 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                     type="email"
                     id="userEmail"
                     name="userEmail"
-                    value={currentUserEmail} 
+                    value={currentUserEmail}
                     onChange={handleInputChange}
-                    disabled  
+                    disabled
                   />
                 </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
                   <input
-                    type="text" 
+                    type="text"
                     id="IdBoost"
                     name="IdBoost"
                     value={formData.IdBoost || ''}
                     onChange={handleInputChange}
                     placeholder="IdBoost"
-                    required  
+                    required
                   />
                 </div>
-
+                <span>&nbsp;</span>
+                <div className={styles.inputField}>
+                  <select
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select a city</option>
+                    {cities.map((city, index) => (
+                      <option key={index} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
                   <textarea
@@ -210,7 +228,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                       <div className={styles.recordField}>{entry.userEmail}</div>
                       <div className={styles.recordField}>{entry.IdBoost}</div>
                       <div className={styles.recordField}>{entry.status}</div>
-
+                      <div className={styles.recordField}>{entry.city}</div> 
                       <div className={styles.recordField}>
                         <span className={styles.iconSpace}></span>
                         <svg
