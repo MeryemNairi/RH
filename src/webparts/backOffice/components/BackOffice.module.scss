@@ -1,10 +1,66 @@
-.welcomeMessage {
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: bold; 
-  color: #002920; 
-  font-size: '30px';
+/* banner */
+.FirstBanner_container{
+  width: 100%;
+  height: 250px;
+  max-width: 1920px;
+  position: relative;
+  background-color: #DFF9F1;
 }
+
+.background{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+.bg_left{
+  width: 50%;
+}
+.bg_right{
+  width: 50%;
+  background-image: url("/sites/CnexiaForEveryone/Assets/imgRH.png");
+  -webkit-mask-image: linear-gradient(-90deg, rgba(0,0,0,1) 0%,rgba(0,0,0,1) 10%, rgba(0,0,0,.8) 30%, rgba(0,0,0,.6) 40%,rgba(0,0,0,0) 80%, rgba(0,0,0,0) 100%);
+
+  background-position: center; /* Center the image */
+background-repeat: no-repeat; /* Do not repeat the image */
+background-size: cover; /* Resize the background image to cover */
+}
+.second_layer{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: linear-gradient(262deg, rgba(223,249,241,0) 26%, rgba(223,249,241,1) 100%);
+}
+
+.content_layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+}
+
+.welcomeMessage {
+  text-align: left; /* Aligner le texte à gauche */
+  font-weight: bold;
+  color: #002920;
+  font-size: 20px;
+  width: 600px;
+  padding-left: 90px; 
+}
+
+.newLine {
+  display: block; /* Crée un retour à la ligne */
+  margin-top: 30px; /* Ajuster l'espacement si nécessaire */
+}
+
 
 /* Couleur status */
 .statusPending {

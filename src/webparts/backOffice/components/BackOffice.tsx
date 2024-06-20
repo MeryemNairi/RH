@@ -16,7 +16,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     IdBoost: NaN,
     status: 'pending',
     city: '',
-    code: '', 
+    code: '',
   });
 
   const [formEntries, setFormEntries] = React.useState<IFormData[]>([]);
@@ -57,7 +57,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     }
   };
   const generateUniqueCode = (): string => {
-    return Math.random().toString(36).substr(2, 9); 
+    return Math.random().toString(36).substr(2, 9);
   };
 
   const isCodeDuplicate = (code: string): boolean => {
@@ -89,7 +89,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
         IdBoost: NaN,
         status: 'pending',
         city: '',
-        code: generatedCode, 
+        code: generatedCode,
       });
 
       alert('Form submitted successfully!');
@@ -144,21 +144,33 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
         return '';
     }
   };
-  
+
 
   return (
     <div>
       <Navbar />
+      <div className={styles.FirstBanner_container}>
+        <div className={styles.background}>
+          <div className={styles.bg_left}>
+
+          </div>
+          <div className={styles.bg_right}>
+
+          </div>
+        </div>
+        <div className={styles.second_layer}>
+
+        </div>
+        <div className={styles.content_layer}>
+          <div className={styles.welcomeMessage}>
+            <p>Bonjour {currentUserName || 'Utilisateur'} et Bienvenue sur les demandes RH ! <span className={styles.newLine}></span> Veuillez sélectionner votre demande et remplir le formulaire. Vous recevrez votre demande dans les plus brefs délais.</p>
+          </div>
+        </div>
+
+      </div>
       <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', padding: '0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div>
-            <div className={styles.welcomeMessage}>
-              <p>Bonjour {currentUserName || 'Utilisateur'} et Bienvenue sur les demandes RH !</p>
-            </div>
-            <div style={{ marginBottom: '40px' }}></div>
-            <div className={styles.centeredText}>
-              <p>Veuillez sélectionner votre demande et remplir le formulaire. Vous recevrez votre demande dans les plus brefs délais.</p>
-            </div>
             <div style={{ marginBottom: '90px' }}></div>
             <div style={{ position: 'relative' }}>
               <form className={styles.formContainer1} onSubmit={handleSubmit}>
