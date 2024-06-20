@@ -1,3 +1,50 @@
+.welcomeMessage {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold; 
+  color: #002920; 
+  font-size: '30px';
+}
+
+/* Couleur status */
+.statusPending {
+  font-weight: bold;
+  color: orange; 
+}
+
+.statusInProgress {
+  font-weight: bold;
+  color: blue; 
+}
+
+.statusResolved {
+  font-weight: bold;
+  color: green; 
+}
+
+.statusClosed {
+  font-weight: bold;
+  color: gray; 
+}
+
+.statusRejected {
+  font-weight: bold;
+  color: red; 
+}
+
+/* city style  */
+.boldCity {
+  font-weight: bold;
+}
+
+/* format du text  */
+.centeredText {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #002920; 
+  font-size: '40px';
+}
+
 
 .alertMessage {
   background-color: #FFCCCB;
@@ -10,49 +57,29 @@
 
 .inputField {
   display: flex;
-  align-items: center; // Alignement vertical des éléments dans le champ
-  margin-right: 10px; // Espace entre chaque champ
+  align-items: center;
+  margin-right: 10px; 
 }
 
 .inputField input,
 .inputField select {
-  width: 100%; /* Remplir la largeur disponible */
-  padding: 10px; /* Espacement interne */
-  border: 1px solid #ccc; /* Bordure grise */
-  border-radius: 5px; /* Coins arrondis */
-  outline: none; /* Supprimer la bordure bleue lorsque l'élément est sélectionné */
+  width: 100%; 
+  padding: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  outline: none; 
 }
 
 .inputField select {
-  background-color: #F5F9FF; /* Couleur de fond */
-}
-
-.inputField select option {
-  background-color: #fff; /* Couleur de fond des options */
-}
-
-.inputField select option:hover {
-  background-color: #F5F9FF; /* Couleur de fond au survol */
-}
-
-.inputField input[type="date"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  /* Couleur de fond du calendrier */
   background-color: #F5F9FF;
 }
 
-/* Pour colorer la flèche du calendrier */
-.inputField input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(50%); /* Inverse la couleur */
+.inputField select option {
+  background-color: #fff; 
 }
 
-/* Pour colorer le bouton de rotation du calendrier (flèche) */
-.inputField input[type="date"]::-webkit-inner-spin-button {
-  filter: invert(50%); /* Inverse la couleur */
+.inputField select option:hover {
+  background-color: #F5F9FF; 
 }
 
 
@@ -81,7 +108,7 @@
   font-family: Montserrat;
   font-size: 23px;
   text-align: left;
-  color: #0A2142; /* Couleur du texte en bleu */
+  color: #0A2142; 
   position: relative; /* Position relative pour le positionnement du trait */
 }
 
@@ -222,8 +249,8 @@
 }
 .uploadButton {
   border-radius: 20px;
-  background-color: #B5D3FF;
-  color: #0A2142;
+  background-color: #D9F6E7;
+  color: #03B586;
   border: none;
   padding: 10px 20px;
   margin: 0; /* Réinitialise la marge à zéro */
@@ -237,8 +264,8 @@
 }
 
 .recordsTitle{
-  color: #0A2142;
-  border-bottom: 2px solid #82ABE7;
+  color: #03B586;
+  border-bottom: 2px solid #D9F6E7;
   width: 185px;
   font-weight: bold;
 
@@ -253,7 +280,7 @@
 
 .button {
   border-radius: 20px;
-  background-color: #2B466C;
+  background-color: #04B586;
   color: #FFFFFF;
   border: none;
   padding: 10px 20px;
@@ -268,7 +295,7 @@
 }
 
 .button:hover {
-  background-color: #9EBBE3;
+  background-color: #00966C;
 }
 
 
@@ -292,12 +319,12 @@
 }
 
 .radioButtonSelected {
-  background-color: #9ebbe3;
+  background-color: #044123;
   color: #fff;
 }
 
 .radioButtonSelected:hover {
-  background-color: #7a9eb6;
+  background-color: #044123;
 }
 
 

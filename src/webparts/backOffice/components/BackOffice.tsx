@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IFormProps, IFormData } from './services/BackOfficeService';
-import { submitForm, getFormData, updateFormEntry, deleteFormEntry } from './services/BackOfficeService';
+import { submitForm, getFormData, updateFormEntry } from './services/BackOfficeService';
 import styles from './BackOffice.module.scss';
 import { sp } from "@pnp/sp";
 import Navbar from './Header/navbar';
@@ -13,18 +13,19 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     short_description: '',
     deadline: new Date(),
     userEmail: '',
-    IdBoost:  NaN,
+    IdBoost: NaN,
     status: 'pending',
-    city: '', 
+    city: '',
+    code: '', 
   });
 
   const [formEntries, setFormEntries] = React.useState<IFormData[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [currentUserEmail, setCurrentUserEmail] = React.useState<string>("");
+  const [currentUserName, setCurrentUserName] = React.useState<string>("");
 
   React.useEffect(() => {
     fetchFormData();
-    fetchCurrentUserEmail();
+    fetchCurrentUserName();
   }, []);
 
   const fetchFormData = async () => {
@@ -55,28 +56,42 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
       }));
     }
   };
+  const generateUniqueCode = (): string => {
+    return Math.random().toString(36).substr(2, 9); 
+  };
 
+  const isCodeDuplicate = (code: string): boolean => {
+    return formEntries.some(entry => entry.code === code);
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setIsSubmitting(true);
 
     try {
-      if (formData.id) {
-        await updateFormEntry(formData.id, formData);
-      } else {
-        await submitForm(formData);
+      let generatedCode = generateUniqueCode(); // Générer un code unique
+      while (isCodeDuplicate(generatedCode)) { // Vérifier si le code est déjà utilisé
+        generatedCode = generateUniqueCode(); // Regénérer si le code est en double
       }
+
+      if (formData.id) {
+        await updateFormEntry(formData.id, { ...formData, code: generatedCode });
+      } else {
+        await submitForm({ ...formData, code: generatedCode });
+      }
+
       setFormData({
         id: 0,
         offre_title: '',
         short_description: '',
         deadline: new Date(),
-        userEmail: '',
-        IdBoost:  NaN,
+        userEmail: formData.userEmail,
+        IdBoost: NaN,
         status: 'pending',
-        city: '',  // Reset city to empty string
+        city: '',
+        code: generatedCode, 
       });
+
       alert('Form submitted successfully!');
       fetchFormData();
     } catch (error) {
@@ -87,29 +102,16 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     }
   };
 
-  const handleDeleteEntry = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this entry?')) {
-      try {
-        await deleteFormEntry(id);
-        alert('Form entry deleted successfully!');
-        fetchFormData();
-      } catch (error) {
-        console.error('Error deleting form entry:', error);
-        alert('An error occurred while deleting the form entry. Please try again.');
-      }
-    }
-  };
-
-  const fetchCurrentUserEmail = async () => {
+  const fetchCurrentUserName = async () => {
     try {
       const currentUser = await sp.web.currentUser.get();
-      setCurrentUserEmail(currentUser.Email || "");
+      setCurrentUserName(currentUser.Title || "");
       setFormData(prevState => ({
         ...prevState,
         userEmail: currentUser.Email || "",
       }));
     } catch (error) {
-      console.error("Error fetching current user email:", error);
+      console.error("Error fetching current user name:", error);
     }
   };
 
@@ -124,7 +126,25 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     'Bulletins de paie cachetés',
   ];
 
-  const cities = ['Rabat', 'Fes'];  
+  const cities = ['Rabat', 'Fes'];
+
+  const getStatusStyle = (status: string): string => {
+    switch (status) {
+      case 'pending':
+        return styles.statusPending;
+      case 'in progress':
+        return styles.statusInProgress;
+      case 'resolved':
+        return styles.statusResolved;
+      case 'closed':
+        return styles.statusClosed;
+      case 'rejected':
+        return styles.statusRejected;
+      default:
+        return '';
+    }
+  };
+  
 
   return (
     <div>
@@ -132,7 +152,14 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
       <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', padding: '0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div>
-            <div style={{ marginBottom: '50px' }}></div>
+            <div className={styles.welcomeMessage}>
+              <p>Bonjour {currentUserName || 'Utilisateur'} et Bienvenue sur les demandes RH !</p>
+            </div>
+            <div style={{ marginBottom: '40px' }}></div>
+            <div className={styles.centeredText}>
+              <p>Veuillez sélectionner votre demande et remplir le formulaire. Vous recevrez votre demande dans les plus brefs délais.</p>
+            </div>
+            <div style={{ marginBottom: '90px' }}></div>
             <div style={{ position: 'relative' }}>
               <form className={styles.formContainer1} onSubmit={handleSubmit}>
                 <div className={styles.inputField}>
@@ -156,7 +183,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                     type="email"
                     id="userEmail"
                     name="userEmail"
-                    value={currentUserEmail}
+                    value={formData.userEmail}
                     onChange={handleInputChange}
                     disabled
                   />
@@ -221,27 +248,15 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                 <h2 className={styles.recordsTitle}>Historiques:</h2>
                 <div className={styles.recordsContainer}>
                   {formEntries.map((entry, index) => (
-                    <div key={index} className={styles.record}>
+                    <div key={index} className={`${styles.record}`}>
+                      <div className={styles.recordField}>Code: {entry.code}</div>
                       <div className={styles.recordField}>{entry.offre_title}</div>
                       <div className={styles.recordField}>{entry.short_description}</div>
                       <div className={styles.recordField}>{entry.deadline.toLocaleDateString()}</div>
                       <div className={styles.recordField}>{entry.userEmail}</div>
                       <div className={styles.recordField}>{entry.IdBoost}</div>
-                      <div className={styles.recordField}>{entry.status}</div>
-                      <div className={styles.recordField}>{entry.city}</div> 
-                      <div className={styles.recordField}>
-                        <span className={styles.iconSpace}></span>
-                        <svg
-                          width="28"
-                          height="28"
-                          viewBox="0 0 42 42"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          onClick={() => handleDeleteEntry(entry.id)}
-                        >
-                          <path d="M33.25 7H27.125L25.375 5.25H16.625L14.875 7H8.75V10.5H33.25M10.5 33.25C10.5 34.1783 10.8687 35.0685 11.5251 35.7249C12.1815 36.3813 13.0717 36.75 14 36.75H28C28.9283 36.75 29.8185 36.3813 30.4749 35.7249C31.1313 35.0685 31.5 34.1783 31.5 33.25V12.25H10.5V33.25Z" fill="#FF5454" />
-                        </svg>
-                      </div>
+                      <div className={`${styles.recordField} ${getStatusStyle(entry.status)}`}>{entry.status}</div>
+                      <div className={`${styles.recordField} ${styles.boldCity}`}>{entry.city}</div>
                     </div>
                   ))}
                 </div>
