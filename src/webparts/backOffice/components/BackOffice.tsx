@@ -30,8 +30,10 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
 
   const fetchFormData = async () => {
     try {
-      const formData = await getFormData();
-      setFormEntries(formData);
+      const allFormData = await getFormData();
+      const currentUser = await sp.web.currentUser.get();
+      const filteredFormData = allFormData.filter(entry => entry.userEmail === currentUser.Email);
+      setFormEntries(filteredFormData);
     } catch (error) {
       console.error('Error fetching form data:', error);
     }
@@ -56,6 +58,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
       }));
     }
   };
+
   const generateUniqueCode = (): string => {
     return Math.random().toString(36).substr(2, 9);
   };
@@ -63,6 +66,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
   const isCodeDuplicate = (code: string): boolean => {
     return formEntries.some(entry => entry.code === code);
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -145,28 +149,24 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
     }
   };
 
-
   return (
     <div>
       <Navbar />
       <div className={styles.FirstBanner_container}>
         <div className={styles.background}>
-          <div className={styles.bg_left}>
-
-          </div>
-          <div className={styles.bg_right}>
-
-          </div>
+          <div className={styles.bg_left}></div>
+          <div className={styles.bg_right}></div>
         </div>
-        <div className={styles.second_layer}>
-
-        </div>
+        <div className={styles.second_layer}></div>
         <div className={styles.content_layer}>
           <div className={styles.welcomeMessage}>
-            <p>Bonjour {currentUserName || 'Utilisateur'} et Bienvenue sur les demandes RH ! <span className={styles.newLine}></span> Veuillez sélectionner votre demande et remplir le formulaire. Vous recevrez votre demande dans les plus brefs délais.</p>
+            <p>
+              Bonjour {currentUserName || 'Utilisateur'} et Bienvenue sur les demandes RH !{' '}
+              <span className={styles.newLine}></span> Veuillez sélectionner votre demande et remplir le formulaire. Vous
+              recevrez votre demande dans les plus brefs délais.
+            </p>
           </div>
         </div>
-
       </div>
       <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', padding: '0 20px' }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -175,12 +175,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
             <div style={{ position: 'relative' }}>
               <form className={styles.formContainer1} onSubmit={handleSubmit}>
                 <div className={styles.inputField}>
-                  <select
-                    name="offre_title"
-                    value={formData.offre_title}
-                    onChange={handleInputChange}
-                    required
-                  >
+                  <select name="offre_title" value={formData.offre_title} onChange={handleInputChange} required>
                     <option value="">Select an option</option>
                     {options.map((option, index) => (
                       <option key={index} value={option}>
@@ -214,12 +209,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
                 </div>
                 <span>&nbsp;</span>
                 <div className={styles.inputField}>
-                  <select
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    required
-                  >
+                  <select name="city" value={formData.city} onChange={handleInputChange} required>
                     <option value="">Select a city</option>
                     {cities.map((city, index) => (
                       <option key={index} value={city}>
@@ -259,18 +249,20 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
               <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
                 <h2 className={styles.recordsTitle}>Historiques:</h2>
                 <div className={styles.recordsContainer}>
-                  {formEntries.map((entry, index) => (
-                    <div key={index} className={`${styles.record}`}>
-                      <div className={styles.recordField}>Code: {entry.code}</div>
-                      <div className={styles.recordField}>{entry.offre_title}</div>
-                      <div className={styles.recordField}>{entry.short_description}</div>
-                      <div className={styles.recordField}>{entry.deadline.toLocaleDateString()}</div>
-                      <div className={styles.recordField}>{entry.userEmail}</div>
-                      <div className={styles.recordField}>{entry.IdBoost}</div>
-                      <div className={`${styles.recordField} ${getStatusStyle(entry.status)}`}>{entry.status}</div>
-                      <div className={`${styles.recordField} ${styles.boldCity}`}>{entry.city}</div>
-                    </div>
-                  ))}
+                  {formEntries
+                    .filter(entry => entry.userEmail === formData.userEmail)
+                    .map((entry, index) => (
+                      <div key={index} className={`${styles.record}`}>
+                        <div className={styles.recordField}>Code: {entry.code}</div>
+                        <div className={styles.recordField}>{entry.offre_title}</div>
+                        <div className={styles.recordField}>{entry.short_description}</div>
+                        <div className={styles.recordField}>{entry.deadline.toLocaleDateString()}</div>
+                        <div className={styles.recordField}>{entry.userEmail}</div>
+                        <div className={styles.recordField}>{entry.IdBoost}</div>
+                        <div className={`${styles.recordField} ${getStatusStyle(entry.status)}`}>{entry.status}</div>
+                        <div className={`${styles.recordField} ${styles.boldCity}`}>{entry.city}</div>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
