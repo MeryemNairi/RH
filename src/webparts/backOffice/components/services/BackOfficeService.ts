@@ -14,7 +14,7 @@ export interface IFormData {
   IdBoost: number;
   status: string;
   city: string;
-  code: string; // Champ pour le code généré
+  code: string; 
 }
 
 export const submitForm = async (formData: IFormData): Promise<number> => {
