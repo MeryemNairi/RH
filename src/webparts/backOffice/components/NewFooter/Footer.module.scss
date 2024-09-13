@@ -3,8 +3,6 @@
     height: auto;
     position: relative;
     overflow: hidden;
-    margin-top: 2rem;
-
     background-color: transparent;
     
 }
@@ -41,7 +39,7 @@
     width: 100%;
     padding: 1rem;
     height: 148px;
-    background-color: #002920;
+    background-color: #044123;
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -94,10 +92,35 @@
     width: 100%;
     background-color: #044123;
 }
-.cooperate{
-    p{
-        font-size: 14px;
-        color: #044123;
-        font-weight: 400;
-    }
+
+.cooperate {
+    display: flex;
+    align-items: center; /* Aligne verticalement les éléments au centre */
+    justify-content: space-between; /* Sépare les éléments à gauche et à droite */
+}
+
+.cooperate p {
+    margin-right: auto; /* Pousse les icônes sociales à l'extrémité droite */
+    font-size: 14px;
+    color: #044123;
+    font-weight: 400;
+    display: flex;
+    align-items: center; /* Aligne verticalement les éléments au centre */
+}
+
+.socialIcons {
+    display: flex;
+    gap: 10px; /* Ajoute un espace de 10px entre les icônes */
+}
+
+.social {
+    color: inherit;
+    text-decoration: none;
+    font-size: 20px; /* Ajustez la taille selon vos besoins */
+}
+
+.social svg, .social i {
+    width: auto;
+    height: auto;
+    display: inline-block;
 }
