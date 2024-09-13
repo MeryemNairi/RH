@@ -428,7 +428,7 @@ export const BackOffice: React.FC<IFormProps> = ({ context }) => {
 
                     placeholder="Description"
 
-                    style={{ backgroundColor: '#F5F9FF', width: '690px', height: '200px' }}
+                    style={{ backgroundColor: '#f8fffd', width: '690px', height: '200px' }}
 
                     className={styles.ShortDescription}
 
