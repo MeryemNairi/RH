@@ -15,6 +15,7 @@ export interface IFormData {
   status: string;
   city: string;
   code: string; 
+  pdfLink?: string;
 }
 
 export const submitForm = async (formData: IFormData): Promise<number> => {
@@ -48,7 +49,7 @@ export const submitForm = async (formData: IFormData): Promise<number> => {
 export const getFormData = async (): Promise<IFormData[]> => {
   try {
     const list = sp.web.lists.getByTitle('Communication');
-    const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost', 'status', 'city', 'code').get();
+    const items = await list.items.select('Id', 'offre_title', 'short_description', 'deadline', 'userEmail', 'IdBoost', 'status', 'city', 'code','pdfLink').get();
     return items.map((item: any) => ({
       id: item.Id,
       offre_title: item.offre_title,
@@ -59,6 +60,7 @@ export const getFormData = async (): Promise<IFormData[]> => {
       status: item.status,
       city: item.city,
       code: item.code,
+      pdfLink: item.pdfLink,
     }));
   } catch (error) {
     console.error('Error fetching form data:', error);
